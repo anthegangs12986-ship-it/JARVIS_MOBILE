@@ -1,4 +1,7 @@
-
+      - name: Accept Android SDK Licenses
+        run: |
+          mkdir -p "$HOME/.android"
+          yes | sdkmanager --licenses || true
 name: Build JARVIS Android APK
 
 on:
