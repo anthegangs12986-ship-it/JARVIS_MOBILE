@@ -1,4 +1,3 @@
-
 name: Build JARVIS Android APK
 
 on:
@@ -33,9 +32,19 @@ jobs:
           pip install --upgrade pip setuptools wheel
           pip install buildozer cython==0.29.36
 
-      - name: Build APK
+      - name: Create Buildozer spec
         run: |
-          buildozer android debug
+          buildozer init
+          sed -i 's/^title = .*/title = JARVIS/' buildozer.spec
+          sed -i 's/^package.name = .*/package.name = jarvis/' buildozer.spec
+          sed -i 's/^package.domain = .*/package.domain = com.easytoon/' buildozer.spec
+          sed -i 's/^source.include_exts = .*/source.include_exts = py,png,jpg,kv,atlas,json/' buildozer.spec
+          sed -i 's/^requirements = .*/requirements = python3,kivy,requests/' buildozer.spec
+          echo "android.permissions = INTERNET" >> buildozer.spec
+          echo "android.archs = arm64-v8a" >> buildozer.spec
+
+      - name: Build APK
+        run: buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
